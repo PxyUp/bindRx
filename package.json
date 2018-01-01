@@ -1,0 +1,31 @@
+{
+    "name": "bindRx",
+    "description": "Build reactive dom with bindRx",
+    "keywords": [
+      "model",
+      "view",
+      "controller",
+      "router",
+      "server",
+      "client",
+      "browser",
+      "nodejs",
+      "typescript",
+      "angular",
+      "vuejs",
+      "react",
+      "meteor",
+      "events"
+    ],
+    "author": "Yuriy Panarin",
+    "devDependencies": {
+      "webpack": "3.10.0"
+    },
+    "main": "dist/bindRx.js",
+    "version": "1.0.0",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/PxyUp/bindRx.git"
+    }
+  }
