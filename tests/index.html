@@ -4,5 +4,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>    
     </head><body>
         <p id="test"></p>
+        <script>
+        var react = new bindRx.Reactiver()
+
+        var list = new bindRx.Listener()
+
+        function reactChangeName(event){
+            $("#test").text(event.newValue)
+        }
+        list.registerCallback(react, reactChangeName, "set")
+        list.registerCallback(react, reactChangeName, "change")
+        react.listen(list)
+
+        react.addReactiveProp("name", "reactive")
+        </script>
     </body>
 </html>
