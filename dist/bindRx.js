@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,8 +68,10 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Listener__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindRxArray__ = __webpack_require__(2);
+
 
 
 
@@ -79,7 +81,7 @@ class Reactiver {
         this._reactiverId = Object(__WEBPACK_IMPORTED_MODULE_0__utils__["a" /* GenerateId */])()
         __WEBPACK_IMPORTED_MODULE_0__utils__["b" /* ReactiveDefine */].call(this, Object.keys(options))
         Object.keys(options).forEach((prop) => {
-            this[prop] = options[prop]
+            this.__setReactiveProp(prop, options[prop])
         })
     }
 
@@ -87,9 +89,9 @@ class Reactiver {
         return this._reactiverId
     }
 
-    addReactiveProp(prop, value){
+    addReactiveProp(prop, value) {
         __WEBPACK_IMPORTED_MODULE_0__utils__["b" /* ReactiveDefine */].call(this, [prop])
-        this[prop] = value
+        this.__setReactiveProp(prop, value)
     }
 
     listen(listener) {
@@ -116,6 +118,14 @@ class Reactiver {
         this._listeners.forEach((listener) => {
             listener.__emit(this, event)
         })
+    }
+
+    __setReactiveProp(prop, value) {
+        let newValue = value
+        if (Array.isArray(newValue)) {
+            newValue = new __WEBPACK_IMPORTED_MODULE_2__bindRxArray__["a" /* bindRxArray */](value, prop, this.trigger.bind(this))
+        }
+        this[prop] = newValue
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Reactiver;
@@ -189,31 +199,107 @@ class Listener {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__model_Reactiver__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_Listener__ = __webpack_require__(1);
+class bindRxArray extends Array {
+
+    constructor(arg, prop, triggerFunction) {
+        super(...arg)
+        this.__property = prop
+        this.__trigger = triggerFunction
+    }
+
+    push(item) {
+        super.push.apply(this, [item])
+        this.__trigger({
+            key: this.__property,
+            name: "add",
+            value: item
+        })
+    }
+
+    set(index, value) {
+        const oldValue = this[index]
+        this[index] = value
+        this.__trigger({
+            key: this.__property,
+            name: "change",
+            newValue: value,
+            oldValue: oldValue
+        })
+    }
+
+    pop() {
+        const item = super.pop.apply(this)
+        this.__trigger({
+            key: this.__property,
+            name: "remove",
+            value: item
+        })
+    }
+
+    shift() {
+        const item = super.shift.apply(this)
+        this.__trigger({
+            key: this.__property,
+            name: "remove",
+            value: item
+        })
+    }
+
+    unshift() {
+        const item = super.unshift.apply(this)
+        this.__trigger({
+            key: this.__property,
+            name: "add",
+            value: item
+        })
+    }
 
 
-
-window.bindRx = {
-    Listener: __WEBPACK_IMPORTED_MODULE_1__model_Listener__["a" /* Listener */],
-    Reactiver: __WEBPACK_IMPORTED_MODULE_0__model_Reactiver__["a" /* Reactiver */]
+    splice(index, deleteCount, itemN) {
+        const item = super.unshift.apply(this, [index, deleteCount, itemN])
+        this.__trigger({
+            key: this.__property,
+            name: "remove",
+            value: item
+        })
+    }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = bindRxArray;
+
 
 /***/ }),
 /* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__reactiveDefine__ = __webpack_require__(4);
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__model_Reactiver__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_Listener__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__model_bindRxArray__ = __webpack_require__(2);
+
+
+
+
+window.bindRx = {
+    Listener: __WEBPACK_IMPORTED_MODULE_1__model_Listener__["a" /* Listener */],
+    Reactiver: __WEBPACK_IMPORTED_MODULE_0__model_Reactiver__["a" /* Reactiver */],
+    bindRxArray: __WEBPACK_IMPORTED_MODULE_2__model_bindRxArray__["a" /* bindRxArray */]
+}
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__reactiveDefine__ = __webpack_require__(5);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__reactiveDefine__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__generateId__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__generateId__ = __webpack_require__(6);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__generateId__["a"]; });
 
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -247,7 +333,7 @@ function ReactiveDefine(props = []) {
 }
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
