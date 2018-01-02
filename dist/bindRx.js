@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,9 +68,9 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Listener__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindRxArray__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindRxArray__ = __webpack_require__(6);
 
 
 
@@ -199,6 +199,84 @@ class Listener {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__model_Reactiver__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_Listener__ = __webpack_require__(1);
+
+
+
+window.bindRx = {
+    Listener: __WEBPACK_IMPORTED_MODULE_1__model_Listener__["a" /* Listener */],
+    Reactiver: __WEBPACK_IMPORTED_MODULE_0__model_Reactiver__["a" /* Reactiver */]
+}
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__reactiveDefine__ = __webpack_require__(4);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__reactiveDefine__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__generateId__ = __webpack_require__(5);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__generateId__["a"]; });
+
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = ReactiveDefine;
+function ReactiveDefine(props = []) {
+    if (props.length) {
+        props.forEach((prop) => {
+            let property = undefined
+            Object.defineProperty(this, prop, {
+                set: (value) => {
+                    let oldValue = this[prop]
+                    let newValue = value
+                    let name = "set"
+                    if (oldValue) {
+                        name = "change"
+                    }
+                    property = value
+                    if (this.trigger) {
+                        this.trigger({
+                            key: prop, name, newValue, oldValue
+                        })
+                    }
+
+                },
+                get: () => {
+                    return property
+                }
+            })
+        })
+    }
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = GenerateId;
+function GenerateId(prefix = "__reactiver_") {
+    if (window.__reactiver) {
+        window.__reactiver += 1
+    } else {
+        window.__reactiver = 1
+    }
+    return prefix + window.__reactiver
+}
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 class bindRxArray extends Array {
 
     constructor(arg, prop, triggerFunction) {
@@ -265,87 +343,6 @@ class bindRxArray extends Array {
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = bindRxArray;
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__model_Reactiver__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_Listener__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__model_bindRxArray__ = __webpack_require__(2);
-
-
-
-
-window.bindRx = {
-    Listener: __WEBPACK_IMPORTED_MODULE_1__model_Listener__["a" /* Listener */],
-    Reactiver: __WEBPACK_IMPORTED_MODULE_0__model_Reactiver__["a" /* Reactiver */],
-    bindRxArray: __WEBPACK_IMPORTED_MODULE_2__model_bindRxArray__["a" /* bindRxArray */]
-}
-
-/***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__reactiveDefine__ = __webpack_require__(5);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__reactiveDefine__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__generateId__ = __webpack_require__(6);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__generateId__["a"]; });
-
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = ReactiveDefine;
-function ReactiveDefine(props = []) {
-    if (props.length) {
-        props.forEach((prop) => {
-            let property = undefined
-            Object.defineProperty(this, prop, {
-                set: (value) => {
-                    let oldValue = this[prop]
-                    let newValue = value
-                    let name = "set"
-                    if (oldValue) {
-                        name = "change"
-                    }
-                    property = value
-                    if (this.trigger) {
-                        this.trigger({
-                            key: prop, name, newValue, oldValue
-                        })
-                    }
-
-                },
-                get: () => {
-                    return property
-                }
-            })
-        })
-    }
-}
-
-/***/ }),
-/* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = GenerateId;
-function GenerateId(prefix = "__reactiver_") {
-    if (window.__reactiver) {
-        window.__reactiver += 1
-    } else {
-        window.__reactiver = 1
-    }
-    return prefix + window.__reactiver
-}
 
 
 /***/ })
