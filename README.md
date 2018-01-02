@@ -25,6 +25,8 @@ var react = new bindRx.Reactiver()
         list.registerCallback(react, reactChangeName, "set")
         list.registerCallback(react, reactChangeName, "change")
         react.listen(list)
+        react.addReactiveProp("age", 23)
         react.addReactiveProp("name", ["tester"])
+        react.age++
         react.name.set(0, "tester2")
 ```
